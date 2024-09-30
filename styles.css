@@ -42,7 +42,7 @@ hr {
 	margin: 0 auto;
 
 	/* arranges child elements to a row */
-	display: flex;
+	display: grid;
 	grid-template-columns: repeat(4, 1fr); /* 4 columns */
 	grid-template-rows: repeat(4, 1fr); /* 4 rows */
 
