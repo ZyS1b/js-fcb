@@ -43,6 +43,8 @@ hr {
 
 	/* arranges child elements to a row */
 	display: flex;
+	grid-template-columns: repeat(4, 1fr); /* 4 columns */
+	grid-template-rows: repeat(4, 1fr); /* 4 rows */
 
 	/* allows items to wrap onto multiple lines if there is not enought space in the container */
 	flex-wrap: wrap;
@@ -51,8 +53,6 @@ hr {
 }
 
 .tile {
-	width: 25%;
-	height: 25%;
 	border: 5px solid #343a40;
 	background-color: #6c757d;
 	border-radius: 14px;
@@ -167,8 +167,6 @@ hr {
 	}
 
 	.tile {
-		width: 25%; /* Slightly larger tiles for smaller screens */
-		height: 25%;
 		font-size: 4vw; /* Increase the font size for better readability */
 	}
 }
