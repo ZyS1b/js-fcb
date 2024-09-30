@@ -36,37 +36,13 @@ function setGame() {
 }
 
 // Update the color of the tile based on its num value
-function updateTile(tile, num) {
-
-	tile.innerText = "";
-	tile.classList.value = "";
-
-	// <div class="tile"></div>
-	tile.classList.add("tile");
-
-	if (num > 0) {
-		tile.innerText = num.toString();
-
-		if(num < 8192) {
-			tile.classList.add("x" + num.toString());
-		} 
-		else {
-			tile.classList.add("x8192");
-		}
-	}
-}
-
-window.onload = function() {
-	setGame();
-}
-
 function handleSlide(e) {
     // Handle keyboard controls
     if (e.type === "keydown" && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
-        if (e.code == "ArrowLeft") slideLeft();
-        else if (e.code == "ArrowRight") slideRight();
-        else if (e.code == "ArrowUp") slideUp();
-        else if (e.code == "ArrowDown") slideDown();
+        if (e.code === "ArrowLeft") slideLeft();
+        else if (e.code === "ArrowRight") slideRight();
+        else if (e.code === "ArrowUp") slideUp();
+        else if (e.code === "ArrowDown") slideDown();
 
         setTwo();
     }
@@ -76,13 +52,20 @@ function handleSlide(e) {
         const deltaX = touchEndX - touchStartX;
         const deltaY = touchEndY - touchStartY;
 
-        // Determine swipe direction
+        // Define a minimum threshold for swipe to avoid accidental small moves
+        const threshold = 50; // Adjust this value as needed
+
+        // Detect horizontal or vertical swipe based on the threshold
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX > 0) slideRight(); // Swipe Right
-            else slideLeft(); // Swipe Left
+            if (Math.abs(deltaX) > threshold) {
+                if (deltaX > 0) slideRight(); // Swipe Right
+                else slideLeft(); // Swipe Left
+            }
         } else {
-            if (deltaY > 0) slideDown(); // Swipe Down
-            else slideUp(); // Swipe Up
+            if (Math.abs(deltaY) > threshold) {
+                if (deltaY > 0) slideDown(); // Swipe Down
+                else slideUp(); // Swipe Up
+            }
         }
 
         setTwo();
@@ -113,21 +96,23 @@ let touchStartY = 0;
 let touchEndX = 0;
 let touchEndY = 0;
 
-// Functions to record touch positions
+// Capture touchstart event to record starting coordinates
 document.addEventListener("touchstart", (e) => {
     const firstTouch = e.touches[0];
     touchStartX = firstTouch.clientX;
     touchStartY = firstTouch.clientY;
 });
 
+// Capture touchmove event to update current touch position
 document.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     touchEndX = touch.clientX;
     touchEndY = touch.clientY;
 });
 
-// Add the event listener for touch end to trigger swipe logic
+// Capture touchend event to detect swipes
 document.addEventListener("touchend", handleSlide);
+
 
 function filterZero(row) {
 	return row.filter(num => num != 0);
