@@ -1,4 +1,3 @@
-// Variables - storage of values
 let board;
 let score = 0;
 let rows = 4;
@@ -11,13 +10,12 @@ let is8192Exist = false;
 function setGame() {
 
 	board = [
-		[0, 0, 0, 0],
+	[0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
 	]; // This board will be used as the backend board to design and modify the tiles of the frontend board
 
-	// loop
 	for(let r=0; r<rows; r++) {
 		for(let c=0; c<columns; c++) {
 
@@ -33,12 +31,11 @@ function setGame() {
 			document.getElementById("board").append(tile);
 		}
 	}
-
 	setTwo();
 	setTwo();
 }
 
-// This function is to update the color of the tile based on its num value
+// Update the color of the tile based on its num value
 function updateTile(tile, num) {
 
 	tile.innerText = "";
@@ -48,11 +45,8 @@ function updateTile(tile, num) {
 	tile.classList.add("tile");
 
 	if (num > 0) {
-
-		// <div class="tile">2</div>
 		tile.innerText = num.toString();
 
-		// 2 < 8192
 		if(num < 8192) {
 			tile.classList.add("x" + num.toString());
 		} 
@@ -63,53 +57,77 @@ function updateTile(tile, num) {
 }
 
 window.onload = function() {
-	setGame(); // we call the setGame function
+	setGame();
 }
 
 function handleSlide(e) {
-	console.log(e.code);
+    // Handle keyboard controls
+    if (e.type === "keydown" && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
+        if (e.code == "ArrowLeft") slideLeft();
+        else if (e.code == "ArrowRight") slideRight();
+        else if (e.code == "ArrowUp") slideUp();
+        else if (e.code == "ArrowDown") slideDown();
 
-	if(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)){
-		if(e.code == "ArrowLeft") {
-			slideLeft();
-			setTwo();
-		}
-		else if(e.code == "ArrowRight"){
-			slideRight();
-			setTwo();
+        setTwo();
+    }
 
-		}
-		else if(e.code == "ArrowUp"){
-			slideUp();
-			setTwo();
+    // Handle touch swipe controls
+    if (e.type === "touchend") {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
 
-		}
-		else if(e.code == "ArrowDown"){
-			slideDown();
-			setTwo();
-		}
-	}
+        // Determine swipe direction
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) slideRight(); // Swipe Right
+            else slideLeft(); // Swipe Left
+        } else {
+            if (deltaY > 0) slideDown(); // Swipe Down
+            else slideUp(); // Swipe Up
+        }
 
-	document.getElementById("score").innerText = score;
+        setTwo();
+    }
 
-	setTimeout(()=>{
-		checkWin();
-	}, 100);
+    // Update score and check for win/loss
+    document.getElementById("score").innerText = score;
 
-	if(hasLost() == true) {
+    setTimeout(() => {
+        checkWin();
+    }, 100);
 
-		setTimeout(() => {
-			alert("Game Over. You have lost the game. Game will restart");
-			restartGame();
-			alert("Click any arrow key to restart")
-		}, 100);
-	}
-
+    if (hasLost()) {
+        setTimeout(() => {
+            alert("Game Over. You have lost the game. Game will restart");
+            restartGame();
+            alert("Click any arrow key or swipe to restart");
+        }, 100);
+    }
 }
 
+// Add the event listener for arrow keys
 document.addEventListener("keydown", handleSlide);
 
+// Variables to store the start and end points for swipes
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
 
+// Functions to record touch positions
+document.addEventListener("touchstart", (e) => {
+    const firstTouch = e.touches[0];
+    touchStartX = firstTouch.clientX;
+    touchStartY = firstTouch.clientY;
+});
+
+document.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    touchEndX = touch.clientX;
+    touchEndY = touch.clientY;
+});
+
+// Add the event listener for touch end to trigger swipe logic
+document.addEventListener("touchend", handleSlide);
 
 function filterZero(row) {
 	return row.filter(num => num != 0);
@@ -161,7 +179,7 @@ function slideRight() {
 		// 2220 -> 0222
 		row.reverse();
 		
-		row = slide(row) // use slide function to merge the same values
+		row = slide(row) // merge the same values
 
 		// 4200
 		row.reverse();
@@ -183,11 +201,12 @@ function slideUp() {
 
 		let col = [board[0][c], board[1][c], board[2][c], board[3][c]];
 		
-		col = slide(col); // use slide function to merge the same values
+		col = slide(col); // merge the same values
+		
 		// update the row with the merged tile/s
-
 		for(let r=0; r<rows; r++) {
 			board[r][c] = col[r];
+			
 			// Accesses the tile using it's id
 			let tile = document.getElementById(r.toString() + "-" + c.toString());
 			let num = board[r][c];
@@ -197,18 +216,19 @@ function slideUp() {
 }
 
 function slideDown() {
-	
 	for(let c=0; c<columns; c++) {
 
 		let col = [board[0][c], board[1][c], board[2][c], board[3][c]];
 		
 		col.reverse();
-		col = slide(col); // use slide function to merge the same values
+		col = slide(col); // merge the same values
+		
 		// update the row with the merged tile/s
 		col.reverse();
 
 		for(let r=0; r<rows; r++) {
 			board[r][c] = col[r];
+			
 			// Accesses the tile using it's id
 			let tile = document.getElementById(r.toString() + "-" + c.toString());
 			let num = board[r][c];
@@ -218,7 +238,6 @@ function slideDown() {
 }
 
 function hasEmptyTile() {
-
 	for (let r=0; r<rows; r++) {
 		for (let c=0; c<columns; c++) {
 			if(board[r][c] == 0) {
@@ -230,8 +249,6 @@ function hasEmptyTile() {
 }
 
 function setTwo() {
-
-
 	if(hasEmptyTile() == false) {
 		return;
 	}
@@ -260,10 +277,8 @@ function setTwo() {
 }
 
 function checkWin() {
-
 	for (let r=0; r<rows; r++) {
 		for (let c=0; c<columns; c++) {
-
 			if (board[r][c] == 2048 && is2048Exist == false) {
 				alert("You Win! You got the 2048");
 				is2048Exist = true;
@@ -300,7 +315,6 @@ function hasLost() {
 			}
 			//  No possible moves - meaning true, the user has lost
 		}
-		
 	} return true;	
 }
 
