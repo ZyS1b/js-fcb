@@ -1,3 +1,4 @@
+// Variables - storage of values
 let board;
 let score = 0;
 let rows = 4;
@@ -10,12 +11,13 @@ let is8192Exist = false;
 function setGame() {
 
 	board = [
-	[0, 0, 0, 0],
+		[0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
 	]; // This board will be used as the backend board to design and modify the tiles of the frontend board
 
+	// loop
 	for(let r=0; r<rows; r++) {
 		for(let c=0; c<columns; c++) {
 
@@ -31,14 +33,43 @@ function setGame() {
 			document.getElementById("board").append(tile);
 		}
 	}
+
 	setTwo();
 	setTwo();
 }
 
-// Update the color of the tile based on its num value
+// This function is to update the color of the tile based on its num value
+function updateTile(tile, num) {
+
+	tile.innerText = "";
+	tile.classList.value = "";
+
+	// <div class="tile"></div>
+	tile.classList.add("tile");
+
+	if (num > 0) {
+
+		// <div class="tile">2</div>
+		tile.innerText = num.toString();
+
+		// 2 < 8192
+		if(num < 8192) {
+			tile.classList.add("x" + num.toString());
+		} 
+		else {
+			tile.classList.add("x8192");
+		}
+	}
+}
+
+window.onload = function() {
+	setGame(); // we call the setGame function
+}
+
 function handleSlide(e) {
-    // Handle keyboard controls
-    if(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)){
+	console.log(e.code);
+
+	if(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)){
 		if(e.code == "ArrowLeft") {
 			slideLeft();
 			setTwo();
@@ -59,8 +90,7 @@ function handleSlide(e) {
 		}
 	}
 
-    // Handle touch swipe controls
-    if (e.type === "touchend") {
+	if (e.type === "touchend") {
         const deltaX = touchEndX - touchStartX;
         const deltaY = touchEndY - touchStartY;
 
@@ -83,23 +113,23 @@ function handleSlide(e) {
         }
     }
 
-    // Update score and check for win/loss
-    document.getElementById("score").innerText = score;
+	document.getElementById("score").innerText = score;
 
-    setTimeout(() => {
-        checkWin();
-    }, 100);
+	setTimeout(()=>{
+		checkWin();
+	}, 100);
 
-    if (hasLost()) {
-        setTimeout(() => {
-            alert("Game Over. You have lost the game. Game will restart");
-            restartGame();
-            alert("Click any arrow key or swipe to restart");
-        }, 100);
-    }
+	if(hasLost() == true) {
+
+		setTimeout(() => {
+			alert("Game Over. You have lost the game. Game will restart");
+			restartGame();
+			alert("Click any arrow key to restart")
+		}, 100);
+	}
+
 }
 
-// Add the event listener for arrow keys
 document.addEventListener("keydown", handleSlide);
 
 // Variables to store the start and end points for swipes
@@ -125,6 +155,21 @@ document.addEventListener("touchmove", (e) => {
 // Capture touchend event to detect swipes
 document.addEventListener("touchend", handleSlide);
 
+function slideLeft() {
+	
+	for(let r=0; r<rows; r++) {
+
+		let row = board[r];
+		row = slide(row)
+		board[r] = row;
+
+		for(let c=0; c<columns; c++) {
+			let tile = document.getElementById(r.toString() + "-" + c.toString());
+			let num = board[r][c];
+			updateTile(tile, num);
+		}
+	}
+}
 
 function filterZero(row) {
 	return row.filter(num => num != 0);
@@ -150,22 +195,6 @@ function slide(tiles) {
 	return tiles;
 }
 
-function slideLeft() {
-	
-	for(let r=0; r<rows; r++) {
-
-		let row = board[r];
-		row = slide(row)
-		board[r] = row;
-
-		for(let c=0; c<columns; c++) {
-			let tile = document.getElementById(r.toString() + "-" + c.toString());
-			let num = board[r][c];
-			updateTile(tile, num);
-		}
-	}
-}
-
 function slideRight() {
 	
 	for(let r=0; r<rows; r++) {
@@ -176,7 +205,7 @@ function slideRight() {
 		// 2220 -> 0222
 		row.reverse();
 		
-		row = slide(row) // merge the same values
+		row = slide(row) // use slide function to merge the same values
 
 		// 4200
 		row.reverse();
@@ -198,12 +227,11 @@ function slideUp() {
 
 		let col = [board[0][c], board[1][c], board[2][c], board[3][c]];
 		
-		col = slide(col); // merge the same values
-		
+		col = slide(col); // use slide function to merge the same values
 		// update the row with the merged tile/s
+
 		for(let r=0; r<rows; r++) {
 			board[r][c] = col[r];
-			
 			// Accesses the tile using it's id
 			let tile = document.getElementById(r.toString() + "-" + c.toString());
 			let num = board[r][c];
@@ -213,19 +241,18 @@ function slideUp() {
 }
 
 function slideDown() {
+	
 	for(let c=0; c<columns; c++) {
 
 		let col = [board[0][c], board[1][c], board[2][c], board[3][c]];
 		
 		col.reverse();
-		col = slide(col); // merge the same values
-		
+		col = slide(col); // use slide function to merge the same values
 		// update the row with the merged tile/s
 		col.reverse();
 
 		for(let r=0; r<rows; r++) {
 			board[r][c] = col[r];
-			
 			// Accesses the tile using it's id
 			let tile = document.getElementById(r.toString() + "-" + c.toString());
 			let num = board[r][c];
@@ -235,6 +262,7 @@ function slideDown() {
 }
 
 function hasEmptyTile() {
+
 	for (let r=0; r<rows; r++) {
 		for (let c=0; c<columns; c++) {
 			if(board[r][c] == 0) {
@@ -246,6 +274,8 @@ function hasEmptyTile() {
 }
 
 function setTwo() {
+
+
 	if(hasEmptyTile() == false) {
 		return;
 	}
@@ -274,8 +304,10 @@ function setTwo() {
 }
 
 function checkWin() {
+
 	for (let r=0; r<rows; r++) {
 		for (let c=0; c<columns; c++) {
+
 			if (board[r][c] == 2048 && is2048Exist == false) {
 				alert("You Win! You got the 2048");
 				is2048Exist = true;
@@ -311,8 +343,12 @@ function hasLost() {
 				return false;
 			}
 			//  No possible moves - meaning true, the user has lost
+			
 		}
-	} return true;	
+		
+	} return true;
+
+	
 }
 
 function restartGame() {
@@ -324,5 +360,6 @@ function restartGame() {
 	];
 
 	score = 0;
+
 	setTwo();
 }
