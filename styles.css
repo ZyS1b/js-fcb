@@ -162,8 +162,8 @@ hr {
 
 @media (max-width: 480px) {
 	#board {
-		width: 100vw; /* Use the full width on small screens */
-		height: 100vw; /* Keep square proportions */
+		width: 90vw; /* Use the full width on small screens */
+		height: 90vw; /* Keep square proportions */
 	}
 
 	.tile {
