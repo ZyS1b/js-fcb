@@ -159,3 +159,16 @@ hr {
 	background-image: var(--background-image-url-8192);
 	background-size: 100% 100%;
 }
+
+@media (max-width: 480px) {
+	#board {
+		width: 100vw; /* Use the full width on small screens */
+		height: 100vw; /* Keep square proportions */
+	}
+
+	.tile {
+		width: 23%; /* Slightly larger tiles for smaller screens */
+		height: 23%;
+		font-size: 4vw; /* Increase the font size for better readability */
+	}
+}
