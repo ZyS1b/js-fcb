@@ -39,10 +39,10 @@ function setGame() {
 function handleSlide(e) {
     // Handle keyboard controls
     if (e.type === "keydown" && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
-        if (e.code === "ArrowLeft") slideLeft();
-        else if (e.code === "ArrowRight") slideRight();
-        else if (e.code === "ArrowUp") slideUp();
-        else if (e.code === "ArrowDown") slideDown();
+        if (e.code == "ArrowLeft") slideLeft();
+        else if (e.code == "ArrowRight") slideRight();
+        else if (e.code == "ArrowUp") slideUp();
+        else if (e.code == "ArrowDown") slideDown();
 
         setTwo();
     }
