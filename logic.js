@@ -140,6 +140,7 @@ let touchEndY = 0;
 
 // Capture touchstart event to record starting coordinates
 document.addEventListener("touchstart", (e) => {
+    e.preventDefault(); // prevent refresh when sliding down
     const firstTouch = e.touches[0];
     touchStartX = firstTouch.clientX;
     touchStartY = firstTouch.clientY;
@@ -147,13 +148,14 @@ document.addEventListener("touchstart", (e) => {
 
 // Capture touchmove event to update current touch position
 document.addEventListener("touchmove", (e) => {
+    e.preventDefault(); // prevent refresh when sliding down
     const touch = e.touches[0];
     touchEndX = touch.clientX;
     touchEndY = touch.clientY;
 });
 
 // Capture touchend event to detect swipes
-document.addEventListener("touchend", handleSlide);
+document.addEventListener("touchend", handleSlide, { passive: false });
 
 function slideLeft() {
 	
