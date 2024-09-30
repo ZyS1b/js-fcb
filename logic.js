@@ -66,31 +66,30 @@ window.onload = function() {
 	setGame(); // we call the setGame function
 }
 
+let touchStartX = 0;
+let touchStartY = 0;
+
+// Function to handle keydown and touchend events
 function handleSlide(e) {
-	console.log(e.code);
+    // Handle keyboard input
+    if (e.type === "keydown" && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
+        if (e.code == "ArrowLeft") {
+            slideLeft();
+        } else if (e.code == "ArrowRight") {
+            slideRight();
+        } else if (e.code == "ArrowUp") {
+            slideUp();
+        } else if (e.code == "ArrowDown") {
+            slideDown();
+        }
+        setTwo(); // Set new tile after movement
+    }
 
-	if(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)){
-		if(e.code == "ArrowLeft") {
-			slideLeft();
-			setTwo();
-		}
-		else if(e.code == "ArrowRight"){
-			slideRight();
-			setTwo();
+    // Handle touch input
+    if (e.type === "touchend") {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
 
-		}
-		else if(e.code == "ArrowUp"){
-			slideUp();
-			setTwo();
-
-		}
-		else if(e.code == "ArrowDown"){
-			slideDown();
-			setTwo();
-		}
-	}
-
-	if (e.type === "touchend") {
         const deltaX = touchEndX - touchStartX;
         const deltaY = touchEndY - touchStartY;
 
@@ -98,64 +97,61 @@ function handleSlide(e) {
         const threshold = 50; // Adjust this value as needed
 
         // Detect horizontal or vertical swipe based on the threshold
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (Math.abs(deltaX) > threshold) {
-                if (deltaX > 0) slideRight(); // Swipe Right
-                else slideLeft(); // Swipe Left
-		setTwo();
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+            if (deltaX > 0) {
+                slideRight(); // Swipe Right
+            } else {
+                slideLeft(); // Swipe Left
             }
-        } else {
-            if (Math.abs(deltaY) > threshold) {
-                if (deltaY > 0) slideDown(); // Swipe Down
-                else slideUp(); // Swipe Up
-		setTwo();
+        } else if (Math.abs(deltaY) > threshold) {
+            if (deltaY > 0) {
+                slideDown(); // Swipe Down
+            } else {
+                slideUp(); // Swipe Up
             }
         }
+
+        setTwo(); // Set new tile after movement
     }
 
-	document.getElementById("score").innerText = score;
+    // Update score display
+    document.getElementById("score").innerText = score;
 
-	setTimeout(()=>{
-		checkWin();
-	}, 100);
+    // Check for win condition after a short delay
+    setTimeout(() => {
+        checkWin();
+    }, 100);
 
-	if(hasLost() == true) {
-
-		setTimeout(() => {
-			alert("Game Over. You have lost the game. Game will restart");
-			restartGame();
-			alert("Click any arrow key to restart")
-		}, 100);
-	}
-
+    // Check if the player has lost the game
+    if (hasLost() == true) {
+        setTimeout(() => {
+            alert("Game Over. You have lost the game. Game will restart");
+            restartGame();
+            alert("Click any arrow key to restart");
+        }, 100);
+    }
 }
 
+// Event listeners for keyboard and touch events
 document.addEventListener("keydown", handleSlide);
-
-// Variables to store the start and end points for swipes
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-
-// Capture touchstart event to record starting coordinates
-document.addEventListener("touchstart", (e) => {
-    e.preventDefault(); // prevent refresh when sliding down
-    const firstTouch = e.touches[0];
-    touchStartX = firstTouch.clientX;
-    touchStartY = firstTouch.clientY;
-});
-
-// Capture touchmove event to update current touch position
-document.addEventListener("touchmove", (e) => {
-    e.preventDefault(); // prevent refresh when sliding down
-    const touch = e.touches[0];
-    touchEndX = touch.clientX;
-    touchEndY = touch.clientY;
-});
-
-// Capture touchend event to detect swipes
+document.addEventListener("touchstart", handleTouchStart, { passive: false });
+document.addEventListener("touchmove", handleTouchMove, { passive: false });
 document.addEventListener("touchend", handleSlide, { passive: false });
+
+// Function to handle touch start
+function handleTouchStart(e) {
+    // Prevent default behavior (scrolling)
+    e.preventDefault();
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}
+
+// Function to handle touch move
+function handleTouchMove(e) {
+    // Prevent default behavior (scrolling)
+    e.preventDefault();
+    // We don't need to handle anything here for swipe; it's done in touchend
+}
 
 function slideLeft() {
 	
