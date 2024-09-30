@@ -29,8 +29,10 @@ hr {
 
 #board {
 	/* px - pixels	*/
-	width: 400px;
-	height: 400px;
+	width: 90vw;
+	max-width: 400px;
+	height: 90vw;
+	max-height: 400px;
 	/* Original colors - #bbada0, #cdc1b5 */ 
 	background-color: #343a40;
 	border: 6px solid #343a40;
