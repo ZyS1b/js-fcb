@@ -38,14 +38,26 @@ function setGame() {
 // Update the color of the tile based on its num value
 function handleSlide(e) {
     // Handle keyboard controls
-    if (e.type === "keydown" && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
-        if (e.code == "ArrowLeft") slideLeft();
-        else if (e.code == "ArrowRight") slideRight();
-        else if (e.code == "ArrowUp") slideUp();
-        else if (e.code == "ArrowDown") slideDown();
+    if(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)){
+		if(e.code == "ArrowLeft") {
+			slideLeft();
+			setTwo();
+		}
+		else if(e.code == "ArrowRight"){
+			slideRight();
+			setTwo();
 
-        setTwo();
-    }
+		}
+		else if(e.code == "ArrowUp"){
+			slideUp();
+			setTwo();
+
+		}
+		else if(e.code == "ArrowDown"){
+			slideDown();
+			setTwo();
+		}
+	}
 
     // Handle touch swipe controls
     if (e.type === "touchend") {
@@ -60,15 +72,15 @@ function handleSlide(e) {
             if (Math.abs(deltaX) > threshold) {
                 if (deltaX > 0) slideRight(); // Swipe Right
                 else slideLeft(); // Swipe Left
+		setTwo();
             }
         } else {
             if (Math.abs(deltaY) > threshold) {
                 if (deltaY > 0) slideDown(); // Swipe Down
                 else slideUp(); // Swipe Up
+		setTwo();
             }
         }
-
-        setTwo();
     }
 
     // Update score and check for win/loss
