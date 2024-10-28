@@ -1,6 +1,6 @@
 # 2048 Game 🎮
 
-Welcome to my **2048 Game!** This is a modified version of the classic tile-merging puzzle game, where tiles feature images instead of numbers. It was developed during Zuitt's **Free Coding Bootcamp: JavaScript Game Development Workshop** on **September 28-29**. Dive in and see how many tiles you can merge!
+Welcome to my **2048 Game!** This is a modified version of the classic tile-merging puzzle game, where tiles feature images instead of numbers. It was developed during Zuitt's **Free Coding Bootcamp: JavaScript Game Development Workshop** on **September 28-29, 2024**. Dive in and see how many tiles you can merge!
 
 ## 🌐 Live Demo
 You can play the game live at: [2048 Game Live Demo](https://zys1b.github.io/js-fcb/)  
